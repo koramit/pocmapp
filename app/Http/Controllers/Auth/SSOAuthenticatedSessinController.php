@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 
@@ -43,6 +44,10 @@ class SSOAuthenticatedSessinController extends Controller
     public function store(User $user)
     {
         Auth::login($user);
+
+        if (Session::has('intended_url')) {
+            return redirect(Session::pull('intended_url'));
+        }
 
         return redirect('dashboard');
     }
